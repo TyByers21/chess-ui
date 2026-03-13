@@ -115,12 +115,15 @@ export default function Game() {
   /* ----------------------------- GAME START AUDIO ---------------------------- */
 
   useEffect(() => {
+    if (gameMode === "aivai") return;
     playAudio(AudioEvent.GAME_START);
-  }, []);
+  }, [gameMode, playAudio]);
 
   /* ----------------------------- AI MOVE AUDIO ---------------------------- */
 
   useEffect(() => {
+    if (gameMode === "aivai") return;
+
     const prev = prevGameStateRef.current;
 
     if (
@@ -200,6 +203,8 @@ export default function Game() {
   /* ----------------------------- GAME OVER AUDIO ---------------------------- */
 
   useEffect(() => {
+    if (gameMode === "aivai") return;
+
     if (gameState.isGameOver && gameState.winner) {
       if (gameState.winner === "w") {
         playAudio(AudioEvent.PLAYER_VICTORY);
@@ -207,7 +212,7 @@ export default function Game() {
         playAudio(AudioEvent.AI_VICTORY);
       }
     }
-  }, [gameState.isGameOver, gameState.winner]);
+  }, [gameState.isGameOver, gameState.winner, gameMode, playAudio]);
 
   const handleRestart = () => {
     resetGame();
@@ -224,17 +229,58 @@ export default function Game() {
       : "AI Processing...";
 
   const winnerIsPlayer = gameState.winner === "w" && gameMode !== "aivai";
+  const isGameActive = !gameState.isGameOver;
+  const whiteIsActive = isGameActive && gameState.turn === "w";
+  const blackIsActive = isGameActive && gameState.turn === "b";
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-3 relative overflow-hidden bg-background">
 
       {/* TITLE */}
-      <h1 className="text-4xl font-black neon-text mb-2">NeoChess</h1>
+      <h1 className="mb-2 select-none text-[2.5rem] leading-none font-black tracking-[0.22em] md:text-5xl">
+        <span className="text-primary drop-shadow-[0_0_6px_rgba(0,243,255,0.95)] [text-shadow:0_0_10px_rgba(0,243,255,0.95),0_0_26px_rgba(0,243,255,0.6)]">
+          NEO
+        </span>
+        <span className="ml-2 bg-gradient-to-b from-zinc-100 via-slate-300 to-zinc-500 bg-clip-text text-transparent drop-shadow-[0_2px_0_rgba(255,255,255,0.35)] [text-shadow:0_1px_0_rgba(255,255,255,0.5),0_8px_18px_rgba(0,0,0,0.75)]">
+          CHESS
+        </span>
+      </h1>
 
       {/* PLAYER NAMES */}
-      <div className="flex justify-between w-full max-w-xl text-sm font-mono mb-2">
-        <div className="text-primary">{whiteName}</div>
-        <div className="text-secondary">{blackName}</div>
+      <div className="w-full max-w-xl mb-2 rounded-2xl border border-white/10 bg-black/70 px-4 py-3 shadow-[0_0_30px_rgba(0,0,0,0.55)] backdrop-blur-sm">
+        <div className="flex items-center justify-between gap-3 text-sm font-mono">
+          <div className="flex items-center gap-2">
+            <span
+              className={`h-2.5 w-2.5 rounded-full transition-all ${
+                whiteIsActive ? "bg-primary animate-pulse shadow-[0_0_14px_rgba(0,243,255,0.95)]" : "bg-primary/30"
+              }`}
+            />
+            <span className="font-black text-primary drop-shadow-[0_0_8px_rgba(0,243,255,0.9)]">
+              {whiteName}
+            </span>
+            {whiteIsActive && (
+              <span className="rounded-full border border-primary/40 bg-primary/10 px-2 py-0.5 text-[10px] font-bold tracking-widest text-primary">
+                TURN
+              </span>
+            )}
+          </div>
+
+          <div className="flex items-center gap-2">
+            {blackIsActive && (
+              <span className="rounded-full border border-secondary/40 bg-secondary/10 px-2 py-0.5 text-[10px] font-bold tracking-widest text-secondary">
+                TURN
+              </span>
+            )}
+            <span className="font-black text-secondary drop-shadow-[0_0_8px_rgba(255,58,141,0.9)]">
+              {blackName}
+            </span>
+            <span
+              className={`h-2.5 w-2.5 rounded-full transition-all ${
+                blackIsActive ? "bg-secondary animate-pulse shadow-[0_0_14px_rgba(255,58,141,0.95)]" : "bg-secondary/30"
+              }`}
+            />
+          </div>
+        </div>
       </div>
 
       {/* CAPTURED PIECES */}
