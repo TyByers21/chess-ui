@@ -20,6 +20,8 @@ export interface ChessGameState {
   lastMove: { from: Square; to: Square } | null;
   gameMode: GameMode;
   promotionPending: { from: Square; to: Square } | null;
+  whitePlayer: string;
+  blackPlayer: string;
 }
 
 // Piece square tables for AI evaluation
@@ -223,7 +225,9 @@ function buildGameState(
   selectedSquare: Square | null,
   gameMode: GameMode,
   promotionPending: { from: Square; to: Square } | null,
-  lastMove: { from: Square; to: Square } | null
+  lastMove: { from: Square; to: Square } | null,
+  whitePlayer: string = "White Player",
+  blackPlayer: string = "Black Player"
 ): ChessGameState {
   let winner: "w" | "b" | "draw" | null = null;
   if (chess.isCheckmate()) winner = chess.turn() === "w" ? "b" : "w";
@@ -253,13 +257,15 @@ function buildGameState(
     lastMove,
     gameMode,
     promotionPending,
+    whitePlayer,
+    blackPlayer,
   };
 }
 
-export function useChessEngine(gameMode: GameMode, difficulty: Difficulty) {
+export function useChessEngine(gameMode: GameMode, difficulty: Difficulty, whitePlayer: string = "White Player", blackPlayer: string = "Black Player") {
   const chessRef = useRef(new Chess());
   const [gameState, setGameState] = useState<ChessGameState>(() =>
-    buildGameState(chessRef.current, null, gameMode, null, null)
+    buildGameState(chessRef.current, null, gameMode, null, null, whitePlayer, blackPlayer)
   );
   const aiThinkingRef = useRef(false);
 
@@ -270,8 +276,8 @@ export function useChessEngine(gameMode: GameMode, difficulty: Difficulty) {
   }, [gameMode]);
 
   const updateState = useCallback((sq: Square | null = null, promo: { from: Square; to: Square } | null = null, lastMove: { from: Square; to: Square } | null = null) => {
-    setGameState(buildGameState(chessRef.current, sq, gameMode, promo, lastMove));
-  }, [gameMode]);
+    setGameState(buildGameState(chessRef.current, sq, gameMode, promo, lastMove, whitePlayer, blackPlayer));
+  }, [gameMode, whitePlayer, blackPlayer]);
 
   const selectSquare = useCallback((square: Square) => {
     const chess = chessRef.current;

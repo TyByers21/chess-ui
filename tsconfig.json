@@ -3,7 +3,8 @@
     "client/src/**/*",
     "shared/**/*",
     "server/**/*",
-    "drizzle.config.ts"
+    "drizzle.config.ts",
+    "client/public/audio/events.ts"
   ],
   "exclude": ["node_modules", "build", "dist", "**/*.test.ts"],
   "compilerOptions": {
