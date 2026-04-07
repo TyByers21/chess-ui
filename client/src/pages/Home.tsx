@@ -5,6 +5,8 @@ import { CyberButton } from "@/components/CyberButton";
 import { Trophy, Users, Bot, Cpu } from "lucide-react";
 import type { GameMode, Difficulty } from "@/hooks/use-chess-engine";
 
+type VoiceStyle = "harsh" | "sweet";
+
 const MODES: { id: GameMode; label: string; desc: string; icon: React.ReactNode }[] = [
   {
     id: "pvp",
@@ -32,6 +34,7 @@ export default function Home() {
   const [opponent, setOpponent] = useState("");
   const [gameMode, setGameMode] = useState<GameMode>("pvai");
   const [difficulty, setDifficulty] = useState<Difficulty>("medium");
+  const [voiceStyle, setVoiceStyle] = useState<VoiceStyle>("harsh");
 
   const handleStart = () => {
     const p1 = name.trim() || "Cyber Mint";
@@ -46,6 +49,7 @@ export default function Home() {
     localStorage.setItem("opponentName", p2);
     localStorage.setItem("gameMode", gameMode);
     localStorage.setItem("difficulty", difficulty);
+    localStorage.setItem("voiceStyle", voiceStyle);
     setLocation("/game");
   };
 
@@ -176,6 +180,34 @@ export default function Home() {
               </div>
             </div>
           )}
+
+          {/* Voice Style */}
+<div className="space-y-3">
+  <label className="text-xs font-bold text-primary uppercase tracking-wider">
+    AI Voice Profile
+  </label>
+  <div className="grid grid-cols-2 gap-2">
+    {([
+      { id: "harsh", label: "Gritty Rival", desc: "Cold. Brutal. Relentless.", icon: "💀" },
+      { id: "sweet", label: "Soft Ally",   desc: "Warm. Playful. Charming.",  icon: "🌸" },
+    ] as { id: VoiceStyle; label: string; desc: string; icon: string }[]).map((v) => (
+      <button
+        key={v.id}
+        onClick={() => setVoiceStyle(v.id)}
+        className={`
+          flex flex-col items-center gap-1.5 py-3 px-2 border transition-all text-center
+          ${voiceStyle === v.id
+            ? "border-primary bg-primary/10 text-primary shadow-[0_0_15px_rgba(0,243,255,0.3)]"
+            : "border-border text-muted-foreground hover:border-primary/40 hover:text-primary/70"}
+        `}
+      >
+        <span className="text-xl">{v.icon}</span>
+        <span className="text-[9px] font-bold uppercase tracking-wider leading-tight">{v.label}</span>
+        <span className="text-[8px] text-muted-foreground">{v.desc}</span>
+      </button>
+    ))}
+  </div>
+</div>
 
           {/* Action Buttons */}
           <div className="pt-2 space-y-3">

@@ -96,6 +96,7 @@ export default function Game() {
   const opponentName = localStorage.getItem("opponentName") || "CORTEX AI";
   const gameMode = (localStorage.getItem("gameMode") as GameMode) || "pvai";
   const difficulty = (localStorage.getItem("difficulty") as Difficulty) || "medium";
+  const voiceStyle = (localStorage.getItem("voiceStyle") as "harsh" | "sweet") || "harsh";
 
   const whiteName = playerName;
   const blackName = gameMode === "pvp" ? opponentName : gameMode === "aivai" ? "CORTEX-A" : "Storm AI";
@@ -104,7 +105,7 @@ export default function Game() {
     useChessEngine(gameMode, difficulty, whiteName, blackName);
 
   const { mutate: saveGame } = useCreateGame();
-  const { playAudio, toggleMute, isMuted } = useAudioManager();
+  const { playAudio, toggleMute, isMuted } = useAudioManager(voiceStyle);
 
   const [hasSaved, setHasSaved] = useState(false);
 
