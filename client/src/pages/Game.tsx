@@ -15,6 +15,7 @@ import { AudioEvent } from "../../public/audio/events";
 import { RefreshCw, LogOut, Volume2, VolumeX } from "lucide-react";
 
 import type { GameMode, Difficulty } from "@/hooks/use-chess-engine";
+import type { GameWinner } from "@/types/game";
 
 const PIECE_UNICODE: Record<string, string> = {
   p: "♟",
@@ -183,7 +184,7 @@ export default function Game() {
 
   useEffect(() => {
     if (gameState.isGameOver && !hasSaved) {
-      let winnerLabel = "draw";
+      let winnerLabel: GameWinner = "draw";
 
       if (gameState.winner === "w") winnerLabel = "white";
       else if (gameState.winner === "b") winnerLabel = "black";

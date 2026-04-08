@@ -1,4 +1,4 @@
-import type { InsertGame } from "@shared/schema";
+import type { InsertGame, StoredGame } from "@/types/game";
 
 const STORAGE_KEY = "neo_chess_history";
 
@@ -7,7 +7,7 @@ export function useGames() {
   const games = gamesJson ? JSON.parse(gamesJson) : [];
 
   return {
-    data: games as (InsertGame & { id: number; createdAt: string })[],
+    data: games as StoredGame[],
     isLoading: false,
     isError: false,
     refetch: () => {},
