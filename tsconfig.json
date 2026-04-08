@@ -1,5 +1,5 @@
 {
-  "include": ["client/src/**/*", "client/public/audio/events.ts"],
+  "include": ["src/**/*", "public/audio/events.ts"],
   "exclude": ["node_modules", "build", "dist", "**/*.test.ts"],
   "compilerOptions": {
     "incremental": true,
@@ -16,7 +16,7 @@
     "baseUrl": ".",
     "types": ["node"],
     "paths": {
-      "@/*": ["./client/src/*"]
+      "@/*": ["src/*"]
     }
   }
 }
